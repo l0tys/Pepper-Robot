@@ -1,6 +1,7 @@
 # * Library imports
 import os
 from dotenv import load_dotenv
+import time
 
 # * File imports
 from services import PepperServices
@@ -24,17 +25,23 @@ class Pepper:
         print("Connected to Pepper robot")
 
         try:
+            # self.services.au_life_service.setState("enabled")
+            self.services.as_service.setBodyLanguageMode(1)
+
+            self.services.tts_service.setParameter("speed", 100)
+            self.services.tts_service.setParameter("pitch", 0.5)
+
             wake_robot(self.services.motion_service,
                     self.services.led_service,
-                    self.services.tts_service)
+                    self.services.as_service)
 
-            while True:
-                self.services.nav_service.explore(20)
+            self.services.nav_service.explore(20)
 
         except Exception as e:
             print("An error occurred: {}".format(e))
 
         finally:
+            time.sleep(5)
             rest_robot(self.services.motion_service)
 
 if __name__ == "__main__":
